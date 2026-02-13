@@ -1,0 +1,4 @@
+# direction,rule_number,action,protocol,cidr,ipv6_cidr,port_from,port_to,icmp_type,icmp_code
+ingress,100,allow,tcp,10.0.0.0/8,,443,443,,
+ingress,110,deny,all,0.0.0.0/0,,,,,
+egress,100,allow,tcp,0.0.0.0/0,,443,443,,
