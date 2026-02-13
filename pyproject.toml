@@ -1,0 +1,30 @@
+[build-system]
+requires = ["hatchling>=1.24.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "naclmaker"
+version = "0.1.0"
+description = "Typer CLI for AWS Network ACL management"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "boto3>=1.34.0",
+  "botocore>=1.34.0",
+  "rich>=13.0.0",
+  "typer>=0.12.0",
+]
+
+[project.scripts]
+naclmaker = "naclmaker.cli:run"
+
+[project.optional-dependencies]
+dev = [
+  "black>=24.10.0",
+  "pre-commit>=3.8.0",
+  "pytest>=8.0.0",
+  "ruff>=0.15.1",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/naclmaker"]
