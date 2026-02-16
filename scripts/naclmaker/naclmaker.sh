@@ -93,7 +93,7 @@ direction_to_egress_flag() {
   dir="$(lower "$1")"
 
   case "$dir" in
-    ingress) echo "--no-egress" ;;
+    ingress) echo "" ;;
     egress) echo "--egress" ;;
     *) die "Invalid direction '$1'. Use ingress or egress." ;;
   esac
@@ -152,8 +152,11 @@ apply_rule_entry() {
     --rule-number "$rule_number"
     --protocol "$proto_num"
     --rule-action "$normalized_action"
-    "$egress_flag"
   )
+
+  if [[ "$egress_flag" == "--egress" ]]; then
+    args+=(--egress)
+  fi
 
   if [[ -n "$cidr" ]]; then
     args+=(--cidr-block "$cidr")
@@ -402,7 +405,11 @@ cmd_rule_delete() {
 
   egress_flag="$(direction_to_egress_flag "$direction")"
 
-  aws_ec2 delete-network-acl-entry --network-acl-id "$acl_id" --rule-number "$rule_number" "$egress_flag" >/dev/null
+  if [[ "$egress_flag" == "--egress" ]]; then
+    aws_ec2 delete-network-acl-entry --network-acl-id "$acl_id" --rule-number "$rule_number" --egress >/dev/null
+  else
+    aws_ec2 delete-network-acl-entry --network-acl-id "$acl_id" --rule-number "$rule_number" >/dev/null
+  fi
 
   echo "Rule deleted: acl=$acl_id direction=$direction rule_number=$rule_number"
 }
